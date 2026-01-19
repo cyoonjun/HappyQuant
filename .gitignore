@@ -1,0 +1,31 @@
+/.vscode/
+
+# python
+__pycache__/
+
+# wandb
+wandb/
+checkpoints/
+
+# backup
+local_backup/
+scratchpad/
+sulis/
+kraken/
+jamie/
+hx1/
+
+justfile
+
+*.safetensors
+
+slurm/
+
+*.pt 
+*.png
+experiments/ptq/slurm_init_method/
+experiments/ptq/slurm_init/
+
+
+# Ignore file mode (chmod) changes
+*/*/*/mode

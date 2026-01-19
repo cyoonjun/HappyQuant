@@ -1,0 +1,1 @@
+bash ./experiments/ptq/quantize_and_eval_iterate.sh
