@@ -24,7 +24,7 @@ conda activate srr
 ## 2. Run the PTQ Script
 
 ```bash
-./experiments/ptq/run.sh
+./experiments/ptq/quantize_and_eval_iterate.sh
 ```
 
 By default, this runs PTQ with SRR using `qera-exact` scaling on the LLaMA-2 7B model.
