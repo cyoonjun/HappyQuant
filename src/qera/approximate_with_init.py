@@ -83,3 +83,26 @@ def srr_init(weight: torch.Tensor, scale: torch.Tensor, rank: int, layer_qera_co
         return L, R, ada_rank
     else:
         return L, R
+
+def _compute_scale_inv_dot_U(scale: torch.Tensor, U: torch.Tensor) -> torch.Tensor:
+    # scale^-1 @ U
+    if scale.ndim == 1:
+        scale = torch.where(
+            scale <= 0, torch.ones_like(scale) * torch.finfo(scale.dtype).eps, scale
+        )
+        return torch.linalg.solve(torch.diag(scale), U)
+    elif scale.ndim == 2:
+        try:
+            return torch.linalg.solve(scale, U)
+        except RuntimeError as e:
+            logger.warning(f"Matrix inversion failed: {e} Adding turbulence to scale")
+            U_scale, S_scale, V_T_scale = torch.linalg.svd(scale)
+            S_scale = torch.where(
+                S_scale <= 0,
+                torch.ones_like(S_scale) * torch.finfo(S_scale.dtype).eps,
+                S_scale,
+            )
+            scale = U_scale @ torch.diag(S_scale) @ V_T_scale
+            return torch.linalg.solve(scale, U)
+    else:
+        raise ValueError("Scale must be either a vector (diagonal) or a matrix")
